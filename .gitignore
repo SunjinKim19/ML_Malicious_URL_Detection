@@ -1,1 +1,9 @@
-.DS_Store
+# Dataset
+data/
+
+# Saved Models
+models/
+
+# Python Cache
+__pycache__/
+.ipynb_checkpoints/

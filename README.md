@@ -130,7 +130,7 @@ pip install -r requirements.txt
 그 다음 학습 코드를 실행한다.
 
 ```bash
-python src/main.py
+python src/train.py
 ```
 
 코드가 여러 파일로 나누어져 있다면 아래와 같은 순서로 실행하면 된다.
