@@ -6,13 +6,12 @@ import os
 import matplotlib.pyplot as plt
 from sklearn.metrics import f1_score, roc_auc_score
 
-# 우리가 만든 커스텀 모듈 임포트
 from dataset import URLDataset
 from model import URL1DCNN
 from baseline import run_baseline
 from visualize import generate_presentation_plots
 
-# [기능 1] 실험의 재현성(Reproducibility)을 위한 랜덤 시드 고정 함수
+# 실험의 재현성(Reproducibility)을 위한 랜덤 시드 고정 함수
 def set_seed(seed=42):
     import random
     random.seed(seed)
@@ -29,7 +28,7 @@ def main():
     
     # 하이퍼파라미터 및 경로 설정
     CSV_PATH = "data/malicious_phish.csv"
-    BATCH_SIZE = 256
+    BATCH_SIZE = 128
     EPOCHS = 5
     LR = 0.001
     
@@ -40,10 +39,7 @@ def main():
     try:
         baseline_metrics = run_baseline(CSV_PATH)
     except Exception as e:
-        print(f"\n[경고] 베이스라인 실행 중 오류 발생 (이유: {e})")
-        print("시각화를 위해 임시 베이스라인 점수를 배정합니다.")
-        # 에러 발생 시 그래프 출력을 위한 더미 데이터 처리
-        baseline_metrics = {'accuracy': 0.85, 'f1': 0.75, 'roc_auc': 0.88}
+        raise RuntimeError(f"Baseline 실행 중 오류가 발생했습니다: {e}") from e
 
     # ----------------------------------------------------
     # 단계 2: 파이토치 데이터셋 세팅 및 7:1:2 분할
@@ -169,7 +165,7 @@ def main():
             all_labels.extend(labels.numpy())
             all_probs.extend(probs.cpu().numpy())
             
-    # 최종 결과 지표 산출 (과제 요구사항 만족)
+    # 최종 결과 지표 산출 
     accuracy = np.mean(np.array(all_preds) == np.array(all_labels))
     f1 = f1_score(all_labels, all_preds)
     roc_auc = roc_auc_score(all_labels, all_probs)
